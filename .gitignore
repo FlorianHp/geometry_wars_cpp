@@ -1,0 +1,28 @@
+# Build artifacts
+/build/
+*.o
+*.obj
+*.exe
+*.out
+*.log
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# macOS system files
+.DS_Store
+
+# Editor stuff
+.vscode/
+.idea/
+
+# Binaries
+geometry_wars_cpp
+
+# SFML library paths (wenn du lokal installierte libs hast)
+*.dylib
+*.so
+*.a
