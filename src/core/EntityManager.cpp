@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 
-EntityManager::EntityManager() {
+EntityManager::EntityManager()
+  : m_rng(m_random()) {
 
 }
 
@@ -14,7 +15,7 @@ void EntityManager::update() {
 
   m_entitiesToAdd.clear();
 
-  if (m_died) {
+  if (entityDied) {
 
     for (auto& [tag, entityVec] : m_entityMap) {
   
@@ -64,6 +65,16 @@ const EntityVec &EntityManager::getEntities(const std::string &tag) {
   return m_entities;
 }
 
-void EntityManager::setDied(bool e) {
-  m_died = e;
+float EntityManager::randFloat(float min, float max) {
+
+  std::uniform_real_distribution<float> dist(min, max);
+
+  return dist(m_rng);
+}
+
+int EntityManager::randInt(int min, int max) {
+
+  std::uniform_int_distribution<int> dist(min, max);
+
+  return dist(m_rng);
 }

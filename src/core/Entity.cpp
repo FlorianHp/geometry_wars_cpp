@@ -21,4 +21,8 @@ const size_t Entity::id() const{
 void Entity::destroy() {
   this->m_active = false;
 }
+
+void Entity::reactivate() {
+  m_active = true;
+}
   

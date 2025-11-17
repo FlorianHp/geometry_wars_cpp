@@ -1,9 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include "Game.h"
+#include "core/Game.h"
 
 int main() {
   freopen("/dev/null", "w", stderr);
   
-  Game g("config.txt");
+  Game g("data/config.txt");
   g.run();
 }
