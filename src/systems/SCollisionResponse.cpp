@@ -20,16 +20,15 @@ void SCollisionResponse::resolve(Context& ctx, std::vector<Contact>& contacts) {
     if (handledPairs.count(key)) continue;
     handledPairs.insert(key);
 
-    if (e->tag() == "bullet" && a->tag() == "bullet") continue;
+    const std::string& tagA = e->tag();
+    const std::string& tagB = a->tag();
 
-    if (e->tag() == "enemy" && a->tag() == "enemy") {
-      for (auto& s : ctx.bounceSounds) {
-        if (s.getStatus() == sf::SoundSource::Status::Stopped) {
-          s.setVolume(50.f);
-          s.play();
-          break;
-        }
-      }
+    bool isEnemyEnemy  = (tagA == "enemy"  && tagB == "enemy");
+    bool isBulletA     = (tagA == "bullet");
+    bool isBulletB     = (tagB == "bullet");
+    bool hasBullet     = isBulletA || isBulletB;
+
+    if (isEnemyEnemy) {
 
       Vec2 rv = a->cTransform->velocity - e->cTransform->velocity;
       float velAlongNormal = rv.dot(c.normal);
@@ -62,19 +61,42 @@ void SCollisionResponse::resolve(Context& ctx, std::vector<Contact>& contacts) {
           break;
         }
       } 
+    } else if (hasBullet) {
+
+      auto bullet = isBulletA ? e : a;
+      auto other  = isBulletA ? a : e;
+
+      if (bullet->cOwner && bullet->cOwner->id == other->id()) {
+        continue;
+      }
+
+      if (other->tag() == "bullet") {
+        /**
+         * @todo may make bullets destroyable later
+         */
+        continue;
+      }
+
+      if (other->tag() == "enemy" && bullet->cDamage) {
+
+        bullet->destroy();
+        other->destroy();
+
+        ctx.entities.entityDied = true;
+
+        for (auto& s : ctx.explosionSounds) {
+          if (s.getStatus() == sf::SoundSource::Status::Stopped) {
+            s.setVolume(60.f);
+            s.play();
+            break;
+          }
+        }
+      }
     } else {
       e->destroy();
       a->destroy();
 
       ctx.entities.entityDied = true;
-
-      for (auto& s : ctx.explosionSounds) {
-        if (s.getStatus() == sf::SoundSource::Status::Stopped) {
-          s.setVolume(60.f);
-          s.play();
-          break;
-        }
-      } 
     }
   }
 }
@@ -89,26 +111,24 @@ void SCollisionResponse::resolveWallCollisions(Context& ctx) {
     Vec2& pos    = e->cTransform->pos;
     Vec2& vel    = e->cTransform->velocity;
 
-    bool bounced = false;
-
     if (pos.x + radius >= windowSize.x) {
       pos.x   = windowSize.x - radius;
       vel.x  *= -1;
-      bounced = true;
+
     } else if (pos.x - radius <= 0) {
       pos.x   = radius;
       vel.x  *= -1;
-      bounced = true;
+      
     }
 
     if (pos.y + radius >= windowSize.y) {
       pos.y   = windowSize.y - radius;
       vel.y  *= -1;
-      bounced = true;
+
     } else if (pos.y - radius <= 0) {
       pos.y   = radius;
       vel.y  *= -1;
-      bounced = true;
+
     }
   }
 }

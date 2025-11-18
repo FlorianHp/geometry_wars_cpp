@@ -24,6 +24,7 @@ add_executable(geometry_wars_cpp
     src/systems/SEnemySpawner.cpp
     src/systems/SRender.cpp
     src/systems/SUserInput.cpp
+    src/systems/SBullet.cpp
 )
 
 target_link_libraries(geometry_wars_cpp

@@ -61,8 +61,7 @@ const EntityVec &EntityManager::getEntities() {
 
 const EntityVec &EntityManager::getEntities(const std::string &tag) {
 
-  /** @todo correct vector from map */
-  return m_entities;
+  return m_entityMap[tag];
 }
 
 float EntityManager::randFloat(float min, float max) {

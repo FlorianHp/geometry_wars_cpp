@@ -107,15 +107,17 @@ void Game::run() {
     ctx.entities.update();
     ctx.entities.entityDied = false;
 
+    SUserInput::update(ctx);
+
     if (!ctx.paused) {
 
-      auto contacts = SCollisionDetection::compute(ctx);
-
-      SCollisionResponse::resolve(ctx, contacts);
-      SCollisionResponse::resolveWallCollisions(ctx);
       SEnemySpawner::update(ctx);
       SMovement::update(ctx);
-      SUserInput::update(ctx);
+      SBullet::update(ctx);
+
+      auto contacts = SCollisionDetection::compute(ctx);
+      SCollisionResponse::resolve(ctx, contacts);
+      SCollisionResponse::resolveWallCollisions(ctx);
 
       if ( !ctx.player || !ctx.player->isActive() ) {
         repositionPlayer(ctx);

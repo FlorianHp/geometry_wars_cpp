@@ -13,6 +13,7 @@
 #include "systems/SMovement.h"
 #include "systems/SRender.h"
 #include "systems/SUserInput.h"
+#include "systems/SBullet.h"
 
 
 class Game {
