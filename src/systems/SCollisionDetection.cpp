@@ -2,31 +2,33 @@
 #include <cmath>
 
 std::vector<Contact> SCollisionDetection::compute(Context& ctx) {
-    std::vector<Contact> contacts;
-    auto& entities = ctx.entities.getEntities();
 
-    for (size_t i = 0; i < entities.size(); ++i) {
-        auto& e = entities[i];
-        if (!e->cTransform || !e->cShape) continue;
+  std::vector<Contact> contacts;
+  
+  auto& entities = ctx.entities.getEntities();
 
-        for (size_t j = i + 1; j < entities.size(); ++j) {
-            auto& a = entities[j];
-            if (!a->cTransform || !a->cShape) continue;
+  for (size_t i = 0; i < entities.size(); ++i) {
+    auto& e = entities[i];
+    if (!e->cTransform || !e->cShape) continue;
 
-            Vec2 delta = a->cTransform->pos - e->cTransform->pos;
-            float distSq = delta.x * delta.x + delta.y * delta.y;
+    for (size_t j = i + 1; j < entities.size(); ++j) {
+      auto& a = entities[j];
+      if (!a->cTransform || !a->cShape) continue;
 
-            float combinedRadius = e->cShape->circle.getRadius() + a->cShape->circle.getRadius();
+      Vec2 delta = a->cTransform->pos - e->cTransform->pos;
+      float distSq = delta.x * delta.x + delta.y * delta.y;
 
-            if (distSq <= combinedRadius * combinedRadius && distSq > 0.0f) {
-                float dist = std::sqrt(distSq);
-                Vec2 normal = delta / dist;
-                float penetration = combinedRadius - dist; // garantiert >= 0
+      float combinedRadius = e->cShape->circle.getRadius() + a->cShape->circle.getRadius();
 
-                contacts.push_back({ e, a, normal, penetration, 1.0f });
-            }
-        }
+      if (distSq <= combinedRadius * combinedRadius && distSq > 0.0f) {
+        float dist = std::sqrt(distSq);
+        Vec2 normal = delta / dist;
+        float penetration = combinedRadius - dist;
+
+        contacts.push_back({ e, a, normal, penetration, 1.0f });
+      }
     }
+  }
 
-    return contacts;
+  return contacts;
 }

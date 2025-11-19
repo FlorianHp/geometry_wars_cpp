@@ -3,13 +3,13 @@
 #include <vector>
 
 struct Contact {
-    std::shared_ptr<Entity> A;
-    std::shared_ptr<Entity> B;
-    Vec2 normal;
-    float penetration;
-    float restitution;
+  std::shared_ptr<Entity> A;
+  std::shared_ptr<Entity> B;
+  Vec2 normal;
+  float penetration;
+  float restitution;
 };
 
 struct SCollisionDetection {
-    static std::vector<Contact> compute(Context& ctx);
+  static std::vector<Contact> compute(Context& ctx);
 };

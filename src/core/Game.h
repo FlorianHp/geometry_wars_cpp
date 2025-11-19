@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-
 #include "Entity.h"
 #include "EntityManager.h"
 #include "Context.h"
@@ -38,9 +37,9 @@ class Game {
   //void spawnSpecialWeapon(std::shared_ptr<Entity> entity);
 
 
-  public:
+public:
 
-    Game(const std::string &config);
+  Game(const std::string &config);
 
-    void run();
+  void run();
 };

@@ -3,5 +3,5 @@
 #include "core/Context.h"
 
 struct SRender {
-    static void update(Context& ctx);
+  static void update(Context& ctx);
 };

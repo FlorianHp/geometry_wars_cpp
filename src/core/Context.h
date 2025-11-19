@@ -9,20 +9,19 @@ struct EnemyConfig  { int SR, CR, OR, OG, OB, OT, VMIN, VMAX, L, SI; float SMIN,
 struct BulletConfig { int SR, CR, FR, FG, FB, OR, OG, OB, OT, V, L; float S; };
 
 struct Context {
-    EntityManager& entities;
-    sf::RenderWindow& window;
-    std::vector<sf::Sound>& bounceSounds;
-    std::vector<sf::Sound>& explosionSounds;
+  EntityManager& entities;
+  sf::RenderWindow& window;
+  std::vector<sf::Sound>& bounceSounds;
+  std::vector<sf::Sound>& explosionSounds;  
 
-    int  score;
-    int  currentFrame;
-    int  lastEnemySpawnTime;
-    bool paused;
-    bool running;
-
-    PlayerConfig playerConfig;
-    BulletConfig bulletConfig;
-    EnemyConfig  enemyConfig;
+  int  score;
+  int  currentFrame;
+  int  lastEnemySpawnTime;
+  bool paused;
+  bool running;
     
-    std::shared_ptr<Entity> player;
+  PlayerConfig playerConfig;
+  BulletConfig bulletConfig;
+  EnemyConfig  enemyConfig;  
+  std::shared_ptr<Entity> player;
 };

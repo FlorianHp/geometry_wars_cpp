@@ -36,8 +36,8 @@ void Game::init(const std::string &path) {
   ctx.explosionSounds.reserve(SOUND_POOL_SIZE);
 
   for (int i = 0; i < SOUND_POOL_SIZE; ++i) {
-      ctx.bounceSounds.emplace_back(m_bounceBuffer);
-      ctx.explosionSounds.emplace_back(m_explosionBuffer);
+    ctx.bounceSounds.emplace_back(m_bounceBuffer);
+    ctx.explosionSounds.emplace_back(m_explosionBuffer);
   }
 
   std::ifstream fin(path);
@@ -102,7 +102,11 @@ void Game::init(const std::string &path) {
 
 void Game::run() {
 
+  sf::Clock clock;
+
   while(ctx.running) {
+
+    float dt = clock.restart().asSeconds();
 
     ctx.entities.update();
     ctx.entities.entityDied = false;
@@ -112,7 +116,7 @@ void Game::run() {
     if (!ctx.paused) {
 
       SEnemySpawner::update(ctx);
-      SMovement::update(ctx);
+      SMovement::update(ctx, dt);
       SBullet::update(ctx);
 
       auto contacts = SCollisionDetection::compute(ctx);
@@ -146,7 +150,7 @@ void Game::spawnPlayer() {
 
 void Game::repositionPlayer(Context& ctx) {
   
-    ctx.player->cTransform->pos      = Vec2(ctx.window.getSize().x / 2, ctx.window.getSize().y / 2);
-    ctx.player->cTransform->velocity = Vec2(0, 0);
-    ctx.player->reactivate();
+  ctx.player->cTransform->pos      = Vec2(ctx.window.getSize().x / 2, ctx.window.getSize().y / 2);
+  ctx.player->cTransform->velocity = Vec2(0, 0);
+  ctx.player->reactivate();
 }
