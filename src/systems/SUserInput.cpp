@@ -2,7 +2,7 @@
 
 namespace {
   constexpr float BULLET_SPEED     = 10.0f;
-  constexpr float BULLET_RANGE     = 300.0f;
+  constexpr float BULLET_RANGE     = 400.0f;
   constexpr float BULLET_FADE_FROM = 0.8f;
   constexpr int   BULLET_DAMAGE    = 1;
 }

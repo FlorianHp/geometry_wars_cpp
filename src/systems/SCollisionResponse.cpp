@@ -97,6 +97,13 @@ void SCollisionResponse::resolve(Context& ctx, std::vector<Contact>& contacts) {
       a->destroy();
 
       ctx.entities.entityDied = true;
+      for (auto& s : ctx.explosionSounds) {
+        if (s.getStatus() == sf::SoundSource::Status::Stopped) {
+          s.setVolume(60.f);
+          s.play();
+          break;
+        }
+      }
     }
   }
 }
