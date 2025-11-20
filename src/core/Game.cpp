@@ -8,7 +8,7 @@
 
 Game::Game(const std::string &config)
 : m_text(m_font, "", 24),
-  ctx{ m_entities, m_window, m_bounceSounds, m_explosionSounds, 0, 0, 0, false, true, false } {
+  ctx( m_entities, m_window, m_bounceSounds, m_explosionSounds ) {
   init(config);
 }
 
@@ -96,7 +96,38 @@ void Game::init(const std::string &path) {
     }
   }
 
+  ctx.scoreText = std::make_unique<sf::Text>(
+    m_font,
+    "Score: 0",
+    24
+);
+  ctx.scoreText->setFillColor(sf::Color::White);
+  ctx.scoreText->setOutlineThickness(2.f);
+  ctx.scoreText->setPosition({10.f, 10.f});
+
   fin.close();
+
+  sf::Image img({1, 1}, sf::Color::White);
+  ctx.dummyTexture = std::make_shared<sf::Texture>(img);
+
+  ctx.bulletShader = std::make_shared<sf::Shader>();
+
+  if (!ctx.bulletShader->loadFromFile(
+    "assets/shader/laser.vert",
+    "assets/shader/laser.frag"
+  )) {
+    throw std::runtime_error("⚠️ Unable to load bulletShader!");
+  }
+
+  ctx.explosionShader = std::make_shared<sf::Shader>();
+
+  if (!ctx.explosionShader->loadFromFile(
+    "assets/shader/explosion.vert",
+    "assets/shader/explosion.frag"
+  )) {
+    throw std::runtime_error("⚠️ Unable to load explosionShader!");
+  }
+
   spawnPlayer();
 }
 
@@ -108,8 +139,7 @@ void Game::run() {
 
     float dt = clock.restart().asSeconds();
 
-    ctx.entities.update();
-    ctx.entities.entityDied = false;
+    
 
     SUserInput::update(ctx);
 
@@ -123,12 +153,19 @@ void Game::run() {
       SCollisionResponse::resolve(ctx, contacts);
       SCollisionResponse::resolveWallCollisions(ctx);
 
+      SExplosion::update(ctx, dt);
+
       if ( !ctx.player || !ctx.player->isActive() ) {
         repositionPlayer(ctx);
       }
     }
 
+    ctx.scoreText->setString("SCORE: [ " + std::to_string(ctx.score) + " ]");
+
     SRender::update(ctx);
+
+    ctx.entities.update();
+    ctx.entities.entityDied = false;
 
     ctx.currentFrame++;
   }

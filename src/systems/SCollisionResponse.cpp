@@ -1,4 +1,6 @@
 #include "systems/SCollisionResponse.h"
+#include "systems/SExplosion.h"
+#include "SEnemySpawner.h"
 
 #include <algorithm>
 #include <cmath>
@@ -81,8 +83,15 @@ void SCollisionResponse::resolve(Context& ctx, std::vector<Contact>& contacts) {
 
         bullet->destroy();
         other->destroy();
+        SExplosion::spawn(ctx, other->cTransform->pos, 1.f);
+        
+        if (other->cShape->circle.getRadius() == ctx.enemyConfig.CR) {
+          SEnemySpawner::spawnSmallEnemies(ctx, other);
+        }
 
         ctx.entities.entityDied = true;
+
+        ctx.score += other->cShape->circle.getRadius() * 10;
 
         for (auto& s : ctx.explosionSounds) {
           if (s.getStatus() == sf::SoundSource::Status::Stopped) {
@@ -94,7 +103,10 @@ void SCollisionResponse::resolve(Context& ctx, std::vector<Contact>& contacts) {
       }
     } else {
       e->destroy();
+      SExplosion::spawn(ctx, e->cTransform->pos, 1.f);
+
       a->destroy();
+      SExplosion::spawn(ctx, a->cTransform->pos, 1.f);
 
       ctx.entities.entityDied = true;
       for (auto& s : ctx.explosionSounds) {

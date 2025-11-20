@@ -23,6 +23,7 @@ class Entity {
     std::shared_ptr<CProjectile> cProjectile;
     std::shared_ptr<COwner>      cOwner;
     std::shared_ptr<CDamage>     cDamage;
+    std::shared_ptr<CExplosion>  cExplosion;
 
     bool isActive() const;
     const std::string& tag() const;

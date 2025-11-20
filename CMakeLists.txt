@@ -25,6 +25,7 @@ add_executable(geometry_wars_cpp
     src/systems/SRender.cpp
     src/systems/SUserInput.cpp
     src/systems/SBullet.cpp
+    src/systems/SExplosion.cpp
 )
 
 target_link_libraries(geometry_wars_cpp

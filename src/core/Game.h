@@ -13,19 +13,23 @@
 #include "systems/SRender.h"
 #include "systems/SUserInput.h"
 #include "systems/SBullet.h"
+#include "systems/SExplosion.h"
+
 
 
 class Game {
 
-  sf::RenderWindow       m_window;
-  EntityManager          m_entities;
-  sf::Font               m_font;
-  sf::Text               m_text;
-  sf::SoundBuffer        m_explosionBuffer;
-  sf::SoundBuffer        m_bounceBuffer;
-  std::vector<sf::Sound> m_bounceSounds;
-  std::vector<sf::Sound> m_explosionSounds;
-  Context                ctx;
+  sf::RenderWindow          m_window;
+  EntityManager             m_entities;
+  sf::Font                  m_font;
+  sf::Text                  m_text;
+  sf::SoundBuffer           m_explosionBuffer;
+  sf::SoundBuffer           m_bounceBuffer;
+  sf::Clock                 m_clock;
+  sf::Texture               m_dummy;
+  std::vector<sf::Sound>    m_bounceSounds;
+  std::vector<sf::Sound>    m_explosionSounds;
+  Context                   ctx;
 
   static constexpr int SOUND_POOL_SIZE = 8;
 

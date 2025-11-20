@@ -13,16 +13,32 @@ struct CTransform {
     : pos(p), velocity(v), angle(a) {}
 };
 
-struct CShape {
 
+struct CShape {
   sf::CircleShape circle;
+  sf::RectangleShape rect;
+  bool useRect = false;
+
 
   CShape(float radius, int points, const sf::Color &fill, sf::Color outline, float thickness)
-    : circle(radius, points) {
-    circle.setFillColor(fill);
-    circle.setOutlineColor(outline);
-    circle.setOutlineThickness(thickness);
-    circle.setOrigin(sf::Vector2f(radius, radius));
+    : circle(radius, points),
+      rect(sf::Vector2f(radius * 2.f, radius * 2.f)),
+      useRect(false)
+  {
+      circle.setFillColor(fill);
+      circle.setOutlineColor(outline);
+      circle.setOutlineThickness(thickness);
+      circle.setOrigin(sf::Vector2f(radius, radius));
+
+      rect.setFillColor(sf::Color::White);
+      rect.setOrigin({radius, radius});
+  }
+
+  CShape(float width, float height, const sf::Color &fill)
+    : circle(0.f, 0), rect(sf::Vector2f(width, height)), useRect(true)
+  {
+    rect.setFillColor(fill);
+    rect.setOrigin({width * 0.5f, height * 0.5f});
   }
 };
 
@@ -89,8 +105,18 @@ struct CProjectile {
 };
 
 struct CDamage {
+  
   int amount = 0;
 
   CDamage() = default;
   CDamage(int dmg) : amount(dmg) {}
+};
+
+struct CExplosion {
+
+  float time     = 0.0f;
+  float lifetime = 1.0f;
+  float power    = 1.0f;
+  CExplosion(float life = 1.0f, float pow = 1.0f)
+    : lifetime(life), power(pow) {}
 };

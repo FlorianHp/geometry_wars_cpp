@@ -3,6 +3,13 @@
 #include <algorithm>
 #include <cmath>
 
+namespace {
+  constexpr float BULLET_SPEED     = 15.0f;
+  constexpr float BULLET_RANGE     = 400.0f;
+  constexpr float BULLET_FADE_FROM = 0.8f;
+  constexpr int   BULLET_DAMAGE    = 1;
+}
+
 void SBullet::update(Context &ctx) {
 
   for (auto &e : ctx.entities.getEntities("bullet")) {
@@ -49,4 +56,53 @@ void SBullet::update(Context &ctx) {
       ctx.entities.entityDied = true;
     }
   }
+}
+
+void SBullet::spawnBullet(Context& ctx, const Vec2 &target) {
+
+  if (!ctx.player || !ctx.player->cTransform) {
+    return;
+  }
+
+  auto bullet = ctx.entities.addEntity("bullet");
+
+  Vec2 startPos = ctx.player->cTransform->pos;
+  Vec2 dir      = target - startPos;
+  float lenSq   = dir.x * dir.x + dir.y * dir.y;
+
+  if (lenSq > 0.0f) {
+    float len = std::sqrt(lenSq);
+    dir       = dir / len;
+  } else {
+    dir       = Vec2(1.0f, 0.0f);
+  }
+
+  Vec2 velocity = dir * BULLET_SPEED;
+
+  float angleRad = std::atan2(dir.y, dir.x);
+  float angleDeg = angleRad * 180.0f / 3.14159265f;
+
+  bullet->cTransform = std::make_shared<CTransform>(
+    startPos,
+    velocity,
+    angleDeg
+  );
+
+  bullet->cShape = std::make_shared<CShape>(
+    80.f,
+    80.f,
+    sf::Color::White
+  );
+
+  bullet->cShape->rect.setTexture(ctx.dummyTexture.get());
+
+  bullet->cProjectile = std::make_shared<CProjectile>(
+    startPos,
+    BULLET_RANGE,
+    BULLET_FADE_FROM
+  );
+
+  bullet->cOwner = std::make_shared<COwner>(ctx.player->id());
+
+  bullet->cDamage = std::make_shared<CDamage>(BULLET_DAMAGE);
 }

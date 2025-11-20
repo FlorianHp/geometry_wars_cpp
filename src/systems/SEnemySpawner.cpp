@@ -52,10 +52,41 @@ void SEnemySpawner::spawnEnemy(Context& ctx) {
   ctx.lastEnemySpawnTime = ctx.currentFrame;
 }
 
-void SEnemySpawner::spawnSmallEnemies(std::shared_ptr<Entity> e) {
-  /**
-   * @todo shatter enemies
-   */
+void SEnemySpawner::spawnSmallEnemies(Context& ctx, std::shared_ptr<Entity> e) {
+
+  std::vector<std::shared_ptr<Entity>> smallEnemies;
+
+  static const Vec2 dirs[4] = {
+    Vec2( 1,  0),
+    Vec2(-1,  0),
+    Vec2( 0,  1),
+    Vec2( 0, -1)
+};
+
+  float radius      = e->cShape->circle.getRadius() / 2;
+  float spawnOffset = radius * 1.1f;
+  int points        = e->cShape->circle.getPointCount();
+  auto  fill        = e->cShape->circle.getFillColor();
+  auto  outline     = e->cShape->circle.getOutlineColor();
+  float thick       = e->cShape->circle.getOutlineThickness();
+  Vec2 pos          = e->cTransform->pos;
+ 
+  for (int i = 0; i < 4; i++) {
+    auto small = ctx.entities.addEntity("enemy");
+
+    Vec2 smallPos = pos + dirs[i] * spawnOffset; 
+    Vec2 vel = dirs[i] * 4.0f;
+
+    small->cTransform = std::make_shared<CTransform>(smallPos, vel, 0.f);
+
+    small->cShape = std::make_shared<CShape>(
+      radius,
+      points,
+      fill, 
+      outline,
+      thick
+    );
+  }
 }
 
 
