@@ -28,6 +28,6 @@ private:
   std::mt19937       m_rng;
   EntityVec          m_entities;
   EntityVec          m_entitiesToAdd;
-  std::unordered_map<std::string, EntityVec> m_entityMap;
   size_t             m_totalEntities = 0;
+  std::unordered_map<std::string, EntityVec> m_entityMap;
 };
