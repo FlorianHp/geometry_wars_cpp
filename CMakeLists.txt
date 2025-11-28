@@ -3,7 +3,6 @@ project(geometry_wars_cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# vcpkg kümmert sich um das Include-Verzeichnis von SFML, daher entfernen wir alle hartkodierten Pfade
 include_directories(
     ${CMAKE_SOURCE_DIR}/data
     ${CMAKE_SOURCE_DIR}/src
